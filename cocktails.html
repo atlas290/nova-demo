@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NOVA GRILL — Cocktails</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- LE LIEN VERS LE CSS EXTERNE -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <img src="logo.png" alt="Nova Grill" class="header-logo" onerror="this.style.display='none'">
+        <div class="header-text">
+            <span class="nova">NOVA</span><span class="grill">GRILL</span><span class="sub">Resto · Bar · Lounge</span>
+        </div>
+    </header>
+
+    <a href="index.html" class="btn-retour">← Retour aux catégories</a>
+
+    <section>
+        <div class="section-header">
+            <h2 class="section-titre">Les Cocktails</h2>
+            <p class="section-sous-titre">Signatures & Classiques</p>
+        </div>
+        
+        <div id="menu-container"></div>
+    </section>
+
+    <!-- Panier -->
+    <div class="cart-bar" id="cart-bar" onclick="ouvrirPanier()">
+        <div class="cart-bar-text" id="cart-bar-text">0 article</div>
+        <div class="cart-bar-btn">Voir le panier</div>
+    </div>
+    <div id="panier-overlay" onclick="fermerPanier()"></div>
+    <div id="panier-drawer">
+        <div class="drag-handle"></div>
+        <div class="panier-header">
+            <h3>Votre Panier</h3>
+            <div class="header-actions">
+                <button class="btn-vider" onclick="viderPanier()">Vider</button>
+                <button class="btn-fermer" onclick="fermerPanier()">×</button>
+            </div>
+        </div>
+        <div class="panier-content" id="panier-items-container"></div>
+        <div class="panier-footer">
+            <input type="text" id="nom-input" class="input-nom" placeholder="Votre nom" oninput="preparerLienWhatsApp()">
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('livraison', this)">Livraison</button>
+                <button class="mode-btn" onclick="setMode('sur_place', this)">Sur place</button>
+                <button class="mode-btn" onclick="setMode('emporter', this)">À emporter</button>
+            </div>
+            <div id="input-livraison" class="input-cond active">
+                <input type="text" id="adresse-input" placeholder="Adresse de livraison" oninput="preparerLienWhatsApp()">
+            </div>
+            <div id="input-sur_place" class="input-cond">
+                <input type="text" id="table-input" placeholder="Numéro de table" oninput="preparerLienWhatsApp()">
+            </div>
+            <span class="remarque-toggle" onclick="toggleRemarque()">+ Ajouter une remarque</span>
+            <textarea id="remarque-input" class="remarque-input" rows="2" placeholder="Ex: Sans piment..." oninput="preparerLienWhatsApp()"></textarea>
+            <div class="panier-total-row">
+                <span>Total :</span>
+                <span id="panier-total-prix">0 F</span>
+            </div>
+            <a href="#" id="btn-whatsapp" class="btn-whatsapp" target="_blank" disabled>Commander sur WhatsApp</a>
+        </div>
+    </div>
+    <div id="toast">
+        <span id="toast-message">Article ajouté</span>
+        <button onclick="annulerDernierAjout()">Annuler</button>
+    </div>
+
+    <!-- APPEL AUX FICHIERS EXTERNES -->
+    <script src="menu-data.js"></script>
+    <script src="panier.js"></script>
+
+    <!-- LE PETIT SCRIPT UNIQUE A CETTE PAGE (Pour afficher les cocktails) -->
+    <script>
+        window.onload = function() {
+            const container = document.getElementById('menu-container');
+            const items = MENU_DATA.cocktails;
+
+            if (items && items.length > 0) {
+                items.forEach(item => {
+                    const platDiv = document.createElement('div');
+                    platDiv.className = 'plat-item';
+                    platDiv.innerHTML = `
+                        <div class="plat-header">
+                            <span class="plat-nom">${item.nom}</span>
+                            <div class="plat-dots"></div>
+                            <span class="plat-prix">${item.prix.toLocaleString()} F</span>
+                        </div>
+                        ${item.desc ? `<p class="plat-desc">${item.desc}</p>` : ''}
+                        <div class="btn-add-container" id="btn-container-${item.id}">
+                            <button class="btn-add" onclick="ajouterAuPanier('${item.nom}', ${item.prix}, '${item.id}')">+ Ajouter</button>
+                            <div class="btn-qte-control" id="ctrl-${item.id}">
+                                <button onclick="modifierQte('${item.id}', -1)">−</button>
+                                <span id="qte-${item.id}">1</span>
+                                <button onclick="modifierQte('${item.id}', 1)">+</button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(platDiv);
+                    if (panier[item.id]) {
+                        document.getElementById(`btn-container-${item.id}`).querySelector('.btn-add').style.display = 'none';
+                        document.getElementById(`ctrl-${item.id}`).style.display = 'flex';
+                        document.getElementById(`qte-${item.id}`).innerText = panier[item.id].qte;
+                    }
+                });
+            }
+            mettreAJourUI();
+        }
+    </script>
+</body>
+</html>
