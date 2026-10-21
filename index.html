@@ -23,10 +23,14 @@
         <p class="hero-desc">Restaurant · Bar · Lounge · Terrasse</p>
     </section>
 
-    <!-- NOUVELLE BARRE DE RECHERCHE -->
+    <!-- BARRE DE RECHERCHE (Bug corrigé) -->
     <div class="search-container">
         <div class="search-wrapper">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <!-- J'ai ajouté width et height ici pour bloquer la taille -->
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
             <input type="text" id="search-input" class="search-input" placeholder="Rechercher un plat, une boisson..." oninput="rechercherPlat()">
         </div>
     </div>
@@ -34,7 +38,7 @@
     <section class="categories-section">
         <h2 id="categories-title" class="section-titre" style="text-align: center; margin-bottom: 30px;">Notre Carte</h2>
         
-        <!-- GRILLE DES CATÉGORIES (Visible par défaut) -->
+        <!-- GRILLE DES CATÉGORIES -->
         <div id="categories-grid" class="category-grid">
             <a href="cocktails.html" class="category-card"><h3>Les Cocktails</h3><p>Signatures & Classiques</p></a>
             <a href="bieres.html" class="category-card"><h3>Bières & Softs</h3><p>Bien fraîches</p></a>
@@ -43,10 +47,8 @@
             <a href="shots_jus.html" class="category-card"><h3>Shots & Jus</h3><p>Naturels & Composés</p></a>
         </div>
 
-        <!-- RÉSULTATS DE RECHERCHE (Caché par défaut) -->
-        <div id="search-results" style="display: none; max-width: 600px; margin: 0 auto;">
-            <!-- Le JS va injecter les résultats ici -->
-        </div>
+        <!-- RÉSULTATS DE RECHERCHE -->
+        <div id="search-results" style="display: none; max-width: 600px; margin: 0 auto;"></div>
     </section>
 
     <section id="infos">
@@ -69,7 +71,7 @@
     <script src="menu-data.js"></script>
     <script src="panier.js"></script>
     <script>
-        // 1. Initialisation de la barre de panier (comme avant)
+        // 1. Initialisation de la barre de panier
         window.onload = function() {
             let p = JSON.parse(localStorage.getItem('panierNova')) || {};
             let total = 0; let qte = 0;
@@ -89,7 +91,6 @@
             const categoriesGrid = document.getElementById('categories-grid');
             const title = document.getElementById('categories-title');
 
-            // Si la recherche est vide, on remet les catégories
             if(query === '') {
                 resultsContainer.style.display = 'none';
                 resultsContainer.innerHTML = '';
@@ -98,7 +99,6 @@
                 return;
             }
 
-            // Sinon, on cache les catégories
             categoriesGrid.style.display = 'none';
             title.style.display = 'none';
             resultsContainer.style.display = 'block';
@@ -106,11 +106,9 @@
 
             let trouves = [];
 
-            // On cherche dans TOUTES les catégories du fichier menu-data.js
             for (let cat in MENU_DATA) {
                 MENU_DATA[cat].forEach(item => {
                     if(item.nom.toLowerCase().includes(query) || (item.desc && item.desc.toLowerCase().includes(query))) {
-                        // On ajoute une petite étiquette de catégorie pour savoir d'où ça vient
                         let nomCategorie = cat.replace('_', ' ');
                         trouves.push({ ...item, categorie: nomCategorie });
                     }
@@ -141,7 +139,6 @@
                     `;
                     resultsContainer.appendChild(div);
                     
-                    // Si l'article est déjà dans le panier, on l'affiche correctement
                     if (panier[item.id]) {
                         document.getElementById(`btn-container-${item.id}`).querySelector('.btn-add').style.display = 'none';
                         document.getElementById(`ctrl-${item.id}`).style.display = 'flex';
