@@ -118,21 +118,10 @@ section { padding: 0 20px 50px 20px; }
 .btn-footer.appeler { background: var(--gold); color: var(--dark); }
 .btn-footer.whatsapp { background: #25D366; color: white; }
 .demo-note { text-align: center; font-size: 0.7rem; color: #999; margin-top: 40px; }
+
 /* BARRE DE RECHERCHE (INDEX) */
-.search-container {
-    padding: 0 20px 20px 20px; max-width: 600px; margin: 0 auto;
-}
-.search-wrapper {
-    position: relative; width: 100%;
-}
-.search-input {
-    width: 100%; height: 55px; border-radius: 30px; border: 1px solid #D1C4B4;
-    padding: 0 20px 0 50px; font-family: var(--font-texte); font-size: 1rem;
-    background: var(--card); color: var(--text); box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: border-color 0.3s;
-}
+.search-container { padding: 0 20px 20px 20px; max-width: 600px; margin: 0 auto; }
+.search-wrapper { position: relative; width: 100%; }
+.search-input { width: 100%; height: 55px; border-radius: 30px; border: 1px solid #D1C4B4; padding: 0 20px 0 50px; font-family: var(--font-texte); font-size: 1rem; background: var(--card); color: var(--text); box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: border-color 0.3s; }
 .search-input:focus { border-color: var(--red); }
-.search-icon {
-    position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-    width: 20px; height: 20px; color: var(--text-2); pointer-events: none;
-}
+.search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--text-2); pointer-events: none; }
